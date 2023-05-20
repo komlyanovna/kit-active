@@ -17,7 +17,6 @@ export function FormSignin() {
   const navigate = useNavigate()
   const getSignin = (email, password) => api.signIn(email, password)
     .then((data) => {
-      console.log(data)
       dispatch(Actions.setUserToken(data.data.token))
       if (data.data.token) {
         navigate('/closet')

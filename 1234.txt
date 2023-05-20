@@ -15,3 +15,18 @@
    -Для загрузки файлов нужно перебрать массив файлов, которые загружаем
 
    -Сделать редюсер с массивом айди файлов. 
+
+   -запрос на выход через UseMutation
+
+   const request = await fetch('https://job.kitactive.ru/api/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: 'Bearer 555|RzAWmsDPo4QMJG1p54uBcgv9I2X0q78HDexbBHTg'
+        }
+    })
+    if (request.status !== 200) {
+        const data = await request.json()
+        throw new Error(data.message)
+    }
+    return await request.json()

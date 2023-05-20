@@ -23,12 +23,11 @@ export function Closet() {
   } = useQuery({
     queryKey: renderFiles(user),
     queryFn: () => api.getAllFiles(user),
-    // enabled: !user,
   })
+  console.log(data)
 
   const deletedFile = (id) => api.deleteFile(user, id)
-
-  // const filesImg = (user, id) => api.getAllFile(user, id).then((dataImg) => console.log(`data:image/jpg;base64${dataImg}`))
+  const result = (userKey, id) => api.getFiles(userKey, id)
 
   return (
     <>
@@ -71,7 +70,7 @@ export function Closet() {
                       Удалить
                     </button>
                   </div>
-                  <img src={el.url} alt='/' />
+                  <img src={() => result(user, el.id)} alt="/" />
                 </>
               )
             }) : <h2>Файлы загружаются </h2>}
