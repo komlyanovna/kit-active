@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '../../Api'
 import { Upload } from '../Upload'
 import styleCloset from './styles.module.scss'
+import { CardFile } from '../../CardFile'
 
 const RENDER_FILE = ['RENDER_FILE']
 const renderFiles = (i) => RENDER_FILE.concat(i)
@@ -24,10 +25,8 @@ export function Closet() {
     queryKey: renderFiles(user),
     queryFn: () => api.getAllFiles(user),
   })
-  console.log(data)
 
   const deletedFile = (id) => api.deleteFile(user, id)
-  const result = (userKey, id) => api.getFiles(userKey, id)
 
   return (
     <>
@@ -52,26 +51,16 @@ export function Closet() {
           <div className={styleCloset.containerFiles}>
             {data && data.data.files ? data.data.files.map((el) => {
               return (
-                <>
-                  <div key={el.id}>
-                    <p>{el.fileName}</p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigate(`/closet/${el.id}`)
-                      }}
-                    >
-                      Подробнее
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deletedFile(el.id)}
-                    >
-                      Удалить
-                    </button>
-                  </div>
-                  <img src={() => result(user, el.id)} alt="/" />
-                </>
+                <div key={el.id} id="FileId">
+                  <p>{el.fileName}</p>
+                  <CardFile el={el.id} mimeType={el.mimeType} />
+                  <button
+                    type="button"
+                    onClick={() => deletedFile(el.id)}
+                  >
+                    Удалить
+                  </button>
+                </div>
               )
             }) : <h2>Файлы загружаются </h2>}
           </div>

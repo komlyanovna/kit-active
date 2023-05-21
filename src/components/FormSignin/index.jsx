@@ -67,10 +67,6 @@ export function FormSignin() {
           <button type="button">
             <Link className={styleForm.home} to="/">Регистрация</Link>
           </button>
-
-          <button type="button">
-            Войти в личный кабинет
-          </button>
         </Form>
       </Formik>
     </div>

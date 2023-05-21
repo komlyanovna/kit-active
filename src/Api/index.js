@@ -58,19 +58,6 @@ class Api {
     return res
   }
 
-  // getAllFile(token, id) {
-  //   const res = axios(`${this.path}/api/media/${id}`, {
-  //     method: 'GET',
-  //     headers: {
-  //       authorization: `Bearer ${token}`,
-  //       'Content-Type': 'applicatin/json',
-  //     },
-  //   })
-  //     .then((resI) => resI).then((data) => data.data).catch((error) => error)
-  //   console.log(res.data)
-  //   return res.data
-  // }
-
   deleteFile(token, id) {
     const res = axios.delete(`${this.path}/api/media/${id}`, {
       headers: {
@@ -81,13 +68,18 @@ class Api {
     return res
   }
 
-  getFiles(token, id) {
-    return axios.get(`${this.path}/api/media/${id}`, {
+  async cardId(token, id) {
+    const response = await fetch(`${this.path}/api/media/${id}`, {
       headers: {
         authorization: `Bearer ${token}`,
-        'Content-Type': 'applicatin/json',
+        'Content-Type': 'application/json',
       },
-    }).then((data) => data.data)
+    })
+    if (response.status !== 200) {
+      const data = await response.json()
+      throw new Error(data.message)
+    }
+    return await response.json()
   }
 }
 

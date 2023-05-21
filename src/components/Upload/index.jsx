@@ -2,6 +2,8 @@ import { useState, useRef } from 'react'
 import StyleUpload from './style.module.scss'
 import { api } from '../../Api'
 
+export const GET_FILE = ['GET_FILE']
+
 export function Upload({ data }) {
   const filePicker = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
