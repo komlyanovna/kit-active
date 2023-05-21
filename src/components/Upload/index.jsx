@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import StyleUpload from './style.module.scss'
 import { api } from '../../Api'
+import { queryClient } from '../../main'
 
 export const GET_FILE = ['GET_FILE']
 
@@ -18,6 +20,22 @@ export function Upload({ data }) {
     filePicker.current.click()
   }
 
+  const getFile = () => api.setFiles(selectedFile, user)
+
+  const { mutateAsync } = useMutation({
+    mutationFn: () => getFile(selectedFile, user),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: GET_FILE })
+    },
+    onError: (error) => {
+      alert(`Произошла ошибка:  ${error.response.data.message}`)
+    },
+  })
+
+  const files = async () => {
+    await mutateAsync(selectedFile, user)
+  }
+
   const handleUpload = async () => {
     if (!selectedFile) {
       alert('Выберите файл')
@@ -27,7 +45,7 @@ export function Upload({ data }) {
     if (file.size >= 1024 * 1024) {
       alert('Превышен допустимый размер файла')
     } else {
-      api.setFiles(selectedFile, user)
+      files(selectedFile, user)
     }
   }
 

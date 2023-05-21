@@ -19,7 +19,6 @@ class Api {
   }
 
   signIn(email, password) {
-    console.log(email, password)
     const res = axios.post(`${this.path}/api/login`, {
       email,
       password,

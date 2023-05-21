@@ -1,12 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { queryClient } from '../../main'
 import { api } from '../../Api'
-import { Upload } from '../Upload'
+import { GET_FILE, Upload } from '../Upload'
 import styleCloset from './styles.module.scss'
 import { CardFile } from '../../CardFile'
-
-const RENDER_FILE = ['RENDER_FILE']
-const renderFiles = (i) => RENDER_FILE.concat(i)
 
 export function Closet() {
   const navigate = useNavigate()
@@ -22,11 +20,29 @@ export function Closet() {
   const {
     data,
   } = useQuery({
-    queryKey: renderFiles(user),
+    queryKey: GET_FILE,
     queryFn: () => api.getAllFiles(user),
   })
 
-  const deletedFile = (id) => api.deleteFile(user, id)
+  const delitedFile = (id) => {
+    api.deleteFile(user, id)
+  }
+
+  const { mutateAsync } = useMutation({
+    mutationFn: (id) => {
+      delitedFile(id)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: GET_FILE })
+    },
+    onError: (error) => {
+      alert(`Произошла ошибка:  ${error.response.data.message}`)
+    },
+  })
+
+  const deleted = async (id) => {
+    await mutateAsync(id)
+  }
 
   return (
     <>
@@ -56,7 +72,7 @@ export function Closet() {
                   <CardFile el={el.id} mimeType={el.mimeType} />
                   <button
                     type="button"
-                    onClick={() => deletedFile(el.id)}
+                    onClick={() => deleted(el.id)}
                   >
                     Удалить
                   </button>
